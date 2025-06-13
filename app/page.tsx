@@ -164,16 +164,13 @@ export default function PeriodTracker() {
           )}
         </div>
 
-        {/* Calendar */}
-        <div className="flex items-center gap-2 mb-4">
-          <h2 className="text-lg font-semibold text-foreground">Calendar</h2>
-          <Legend />
-        </div>
         <PeriodCalendar
           selectedDate={selectedDate || undefined}
           onDateSelect={handleDateSelect}
           className="w-full"
         />
+
+        <Legend />
       </div>
 
       {/* Day Editor Modal */}
