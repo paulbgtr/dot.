@@ -1,4 +1,4 @@
-# Period Tracker
+# dot.
 
 A modern, privacy-focused period tracking application built with Next.js, React, and TypeScript. Track your menstrual cycle, predict upcoming periods, and monitor your health data—all stored locally on your device.
 
