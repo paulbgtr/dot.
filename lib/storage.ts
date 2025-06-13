@@ -55,14 +55,15 @@ export class PeriodStorage {
         return { ...DEFAULT_APP_DATA };
       }
 
-      const parsed = JSON.parse(stored) as AppData;
+      const parsed = JSON.parse(stored) as Partial<AppData> &
+        Record<string, unknown>;
 
       // Validate and migrate data if necessary
       if (!parsed.version || parsed.version !== STORAGE_VERSION) {
         return this.migrateData(parsed);
       }
 
-      return parsed;
+      return parsed as AppData;
     } catch (error) {
       console.error("Error loading data from localStorage:", error);
       return { ...DEFAULT_APP_DATA };
