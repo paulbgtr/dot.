@@ -188,7 +188,7 @@ function SymptomsSelector({
         <div className="space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
           {filteredSymptoms.length === 0 && searchQuery ? (
             <p className="text-sm text-muted-foreground text-center py-4">
-              No symptoms found matching "{searchQuery}"
+              No symptoms found matching &quot;{searchQuery}&quot;
             </p>
           ) : (
             filteredSymptoms.map((symptom) => (
