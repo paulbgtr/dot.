@@ -85,7 +85,7 @@ export function PeriodCalendar({
         onSelect={handleDateSelect}
         modifiers={getDayModifiers}
         modifiersClassNames={getDayClassNames}
-        className="w-full rounded-xl border shadow-sm"
+        className="w-full"
         captionLayout="dropdown"
         fromYear={2020}
         toYear={2030}
