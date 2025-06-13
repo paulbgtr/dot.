@@ -1,7 +1,13 @@
-import { AppData, UserProfile, PeriodDay, CycleData, DEFAULT_SYMPTOMS } from './types';
+import {
+  AppData,
+  UserProfile,
+  PeriodDay,
+  CycleData,
+  DEFAULT_SYMPTOMS,
+} from "./types";
 
-const STORAGE_KEY = 'period-tracker-data';
-const STORAGE_VERSION = '1.0.0';
+const STORAGE_KEY = "period-tracker-data";
+const STORAGE_VERSION = "1.0.0";
 
 // Default user profile
 const DEFAULT_PROFILE: UserProfile = {
@@ -21,7 +27,7 @@ const DEFAULT_APP_DATA: AppData = {
 };
 
 // Check if we're in a browser environment
-const isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof window !== "undefined";
 
 export class PeriodStorage {
   private static instance: PeriodStorage;
@@ -58,12 +64,14 @@ export class PeriodStorage {
 
       return parsed;
     } catch (error) {
-      console.error('Error loading data from localStorage:', error);
+      console.error("Error loading data from localStorage:", error);
       return { ...DEFAULT_APP_DATA };
     }
   }
 
-  private migrateData(oldData: any): AppData {
+  private migrateData(
+    oldData: Partial<AppData> & Record<string, unknown>,
+  ): AppData {
     // Handle data migration for future versions
     // For now, just merge with defaults
     return {
@@ -80,7 +88,7 @@ export class PeriodStorage {
       this.data.profile.lastUpdated = new Date().toISOString();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
     } catch (error) {
-      console.error('Error saving data to localStorage:', error);
+      console.error("Error saving data to localStorage:", error);
     }
   }
 
@@ -105,11 +113,13 @@ export class PeriodStorage {
   }
 
   public getPeriodDay(date: string): PeriodDay | undefined {
-    return this.data.periods.find(p => p.date === date);
+    return this.data.periods.find((p) => p.date === date);
   }
 
   public addOrUpdatePeriodDay(periodDay: PeriodDay): void {
-    const existingIndex = this.data.periods.findIndex(p => p.date === periodDay.date);
+    const existingIndex = this.data.periods.findIndex(
+      (p) => p.date === periodDay.date,
+    );
 
     if (existingIndex >= 0) {
       this.data.periods[existingIndex] = periodDay;
@@ -124,7 +134,7 @@ export class PeriodStorage {
   }
 
   public removePeriodDay(date: string): void {
-    this.data.periods = this.data.periods.filter(p => p.date !== date);
+    this.data.periods = this.data.periods.filter((p) => p.date !== date);
     this.saveData();
     this.updateCycles();
   }
@@ -137,7 +147,7 @@ export class PeriodStorage {
   private updateCycles(): void {
     // Recalculate cycles based on period data
     const periodDays = this.data.periods
-      .filter(p => p.flow !== 'none')
+      .filter((p) => p.flow !== "none")
       .sort((a, b) => a.date.localeCompare(b.date));
 
     if (periodDays.length === 0) {
@@ -159,14 +169,20 @@ export class PeriodStorage {
       }
 
       const lastDate = new Date(lastPeriodDate!);
-      const daysBetween = Math.floor((currentDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+      const daysBetween = Math.floor(
+        (currentDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24),
+      );
 
       // If more than 10 days between periods, consider it a new cycle
       if (daysBetween > 10) {
         cycles.push({
           startDate: currentCycleStart,
           endDate: lastPeriodDate,
-          length: Math.floor((lastDate.getTime() - new Date(currentCycleStart).getTime()) / (1000 * 60 * 60 * 24)) + 1
+          length:
+            Math.floor(
+              (lastDate.getTime() - new Date(currentCycleStart).getTime()) /
+                (1000 * 60 * 60 * 24),
+            ) + 1,
         });
 
         currentCycleStart = periodDay.date;
@@ -181,8 +197,12 @@ export class PeriodStorage {
         startDate: currentCycleStart,
         endDate: lastPeriodDate || undefined,
         length: lastPeriodDate
-          ? Math.floor((new Date(lastPeriodDate).getTime() - new Date(currentCycleStart).getTime()) / (1000 * 60 * 60 * 24)) + 1
-          : undefined
+          ? Math.floor(
+              (new Date(lastPeriodDate).getTime() -
+                new Date(currentCycleStart).getTime()) /
+                (1000 * 60 * 60 * 24),
+            ) + 1
+          : undefined,
       });
     }
 
@@ -193,7 +213,7 @@ export class PeriodStorage {
   public exportData(): string {
     const exportData = {
       exportDate: new Date().toISOString(),
-      data: this.data
+      data: this.data,
     };
     return JSON.stringify(exportData, null, 2);
   }
@@ -203,20 +223,24 @@ export class PeriodStorage {
       const importData = JSON.parse(jsonData);
 
       // Validate the imported data structure
-      if (!importData.data || !importData.data.profile || !importData.data.periods) {
-        throw new Error('Invalid data format');
+      if (
+        !importData.data ||
+        !importData.data.profile ||
+        !importData.data.periods
+      ) {
+        throw new Error("Invalid data format");
       }
 
       this.data = {
         ...DEFAULT_APP_DATA,
         ...importData.data,
-        version: STORAGE_VERSION
+        version: STORAGE_VERSION,
       };
 
       this.saveData();
       return true;
     } catch (error) {
-      console.error('Error importing data:', error);
+      console.error("Error importing data:", error);
       return false;
     }
   }
@@ -237,22 +261,24 @@ export class PeriodStorage {
     const averageCycleLength = this.data.profile.averageCycleLength;
     const lastCycleStart = new Date(lastCycle.startDate);
 
-    return new Date(lastCycleStart.getTime() + (averageCycleLength * 24 * 60 * 60 * 1000));
+    return new Date(
+      lastCycleStart.getTime() + averageCycleLength * 24 * 60 * 60 * 1000,
+    );
   }
 
   public isDayInPeriod(date: string): boolean {
     const periodDay = this.getPeriodDay(date);
-    return periodDay ? periodDay.flow !== 'none' : false;
+    return periodDay ? periodDay.flow !== "none" : false;
   }
 
   public getDayData(date: string) {
     const periodDay = this.getPeriodDay(date);
     return {
       date,
-      isPeriod: periodDay ? periodDay.flow !== 'none' : false,
-      flow: periodDay?.flow || 'none',
+      isPeriod: periodDay ? periodDay.flow !== "none" : false,
+      flow: periodDay?.flow || "none",
       symptoms: periodDay?.symptoms || [],
-      notes: periodDay?.notes || ''
+      notes: periodDay?.notes || "",
     };
   }
 }
