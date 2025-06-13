@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Calendar, Plus, TrendingUp } from "lucide-react";
+import { Calendar, TrendingUp } from "lucide-react";
 import { PeriodCalendar } from "@/components/PeriodCalendar";
 import { DayEditor } from "@/components/DayEditor";
 import { storage } from "@/lib/storage";
