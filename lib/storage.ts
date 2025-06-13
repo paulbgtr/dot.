@@ -178,7 +178,7 @@ export class PeriodStorage {
       if (daysBetween > 10) {
         cycles.push({
           startDate: currentCycleStart,
-          endDate: lastPeriodDate,
+          endDate: lastPeriodDate || undefined,
           length:
             Math.floor(
               (lastDate.getTime() - new Date(currentCycleStart).getTime()) /
