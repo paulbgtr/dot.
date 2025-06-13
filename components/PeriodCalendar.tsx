@@ -4,7 +4,6 @@ import * as React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { storage } from "@/lib/storage";
 import { parseISO } from "date-fns";
-import { Legend } from "./Legend";
 
 interface PeriodCalendarProps {
   selectedDate?: Date;
@@ -62,13 +61,13 @@ export function PeriodCalendar({
   const getDayClassNames = React.useMemo(() => {
     return {
       light:
-        "calendar-day calendar-day-period bg-gradient-to-br from-rose-200 to-pink-300 text-rose-800 hover:from-rose-300 hover:to-pink-400 shadow-sm",
+        "rounded-xl hover:opacity-75 bg-gradient-to-br from-rose-200 to-pink-300 text-rose-800 hover:from-rose-300 hover:to-pink-400 shadow-sm",
       medium:
-        "calendar-day calendar-day-period bg-gradient-to-br from-rose-400 to-pink-500 text-white hover:from-rose-500 hover:to-pink-600 shadow-md font-medium",
+        "rounded-xl hover:opacity-75 bg-gradient-to-br from-rose-400 to-pink-500 text-white hover:from-rose-500 hover:to-pink-600 shadow-md font-medium",
       heavy:
-        "calendar-day calendar-day-period bg-gradient-to-br from-rose-600 to-pink-700 text-white hover:from-rose-700 hover:to-pink-800 shadow-lg font-semibold",
+        "rounded-xl hover:opacity-75 bg-gradient-to-br from-rose-600 to-pink-700 text-white hover:from-rose-700 hover:to-pink-800 shadow-lg font-semibold",
       symptoms:
-        "ring-2 ring-purple-400 ring-inset bg-purple-50 hover:bg-purple-100",
+        "rounded-xl hover:opacity-75 ring-4 ring-purple-400 ring-inset bg-purple-50 hover:bg-purple-100",
     };
   }, []);
 
@@ -91,9 +90,6 @@ export function PeriodCalendar({
         fromYear={2020}
         toYear={2030}
       />
-
-      {/* Legend */}
-      <Legend />
     </div>
   );
 }
